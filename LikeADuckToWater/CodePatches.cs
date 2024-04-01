@@ -8,7 +8,6 @@ namespace LikeADuckToWater
 {
     public partial class ModEntry
     {
-        [HarmonyPatch(typeof(FarmAnimal), nameof(FarmAnimal.updatePerTenMinutes))]
         public class FarmAnimal_updatePerTenMinutes_Patch
         {
             public static void Postfix(FarmAnimal __instance)
@@ -19,7 +18,6 @@ namespace LikeADuckToWater
             }
         }
         
-        [HarmonyPatch(typeof(FarmAnimal), nameof(FarmAnimal.MovePosition))]
         public class FarmAnimal_MovePosition_Patch
         {
             public static void Prefix(FarmAnimal __instance, ref Vector2 __state)
@@ -34,12 +32,12 @@ namespace LikeADuckToWater
                     return;
                 if(__instance.hopOffset == Vector2.Zero && __state != __instance.Position)
                 {
-                    __instance.isSwimming.Value = currentLocation.isWaterTile(__instance.getTileX(), __instance.getTileY());
+                    __instance.isSwimming.Value = currentLocation.isWaterTile(__instance.TilePoint.X, __instance
+                    .TilePoint.Y);
                 }
             }
         }
 
-        [HarmonyPatch(typeof(FarmAnimal), nameof(FarmAnimal.Eat))]
         public class FarmAnimal_Eat_Patch
         {
             public static void Postfix(FarmAnimal __instance)
@@ -50,7 +48,6 @@ namespace LikeADuckToWater
             }
         }
         
-        [HarmonyPatch(typeof(FarmAnimal), nameof(FarmAnimal.pet))]
         public class FarmAnimal_pet_Patch
         {
             public static void Postfix(FarmAnimal __instance, bool is_auto_pet)
@@ -61,7 +58,6 @@ namespace LikeADuckToWater
             }
         }
               
-        [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.isCollidingPosition), new Type[] { typeof(Rectangle), typeof(xTile.Dimensions.Rectangle), typeof(bool), typeof(int), typeof(bool), typeof(Character), typeof(bool), typeof(bool), typeof(bool) })]
         public class GameLocation_isCollidingPosition_Patch
         {
             public static bool Prefix(GameLocation __instance, Rectangle position, Character character, ref bool __result)
@@ -71,7 +67,6 @@ namespace LikeADuckToWater
                 return true;
             }
         }
-        [HarmonyPatch(typeof(FarmAnimal), nameof(FarmAnimal.dayUpdate))]
         public class FarmAnimal_dayUpdate_Patch
         {
             public static void Postfix(FarmAnimal __instance)
@@ -79,14 +74,13 @@ namespace LikeADuckToWater
                 __instance.modData.Remove(swamTodayKey);
             }
         }
-        [HarmonyPatch(typeof(FarmAnimal), nameof(FarmAnimal.HandleHop))]
         public class FarmAnimal_HandleHop_Patch
         {
             public static void Postfix(FarmAnimal __instance)
             {
                 if (__instance.hopOffset == Vector2.Zero)
                 {
-                    Point p = __instance.getTileLocationPoint();
+                    Point p = __instance.TilePoint;
                     __instance.isSwimming.Value = __instance.currentLocation.doesTileHaveProperty(p.X, p.Y, "Water", "Back") != null;
                 }
                 if (!__instance.modData.ContainsKey(swamTodayKey)) 
@@ -96,7 +90,6 @@ namespace LikeADuckToWater
             }
         }
 
-        [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.isOpenWater))]
         public class GameLocation_isOpenWater_Patch
         {
             public static bool Prefix(GameLocation __instance, int xTile, int yTile, ref bool __result)
@@ -111,11 +104,7 @@ namespace LikeADuckToWater
                 int tile_index = __instance.getTileIndexAt(xTile, yTile, "Buildings");
                 if (tile_index != -1)
                 {
-                    bool tile_blocked = true;
-                    if (__instance.getTileSheetIDAt(xTile, yTile, "Buildings") == "outdoors" && waterBuildingTiles.Contains(tile_index))
-                    {
-                        tile_blocked = false;
-                    }
+                    bool tile_blocked = !(__instance.getTileSheetIDAt(xTile, yTile, "Buildings") == "outdoors" && waterBuildingTiles.Contains(tile_index));
                     if (tile_blocked)
                     {
                         __result = false;
