@@ -1,22 +1,10 @@
 ﻿{
   "Name": "Crop Watering Bubbles",
   "Author": "aedenthorn",
-  "Version": "0.2.5",
+  "Version": "0.2.6",
   "Description": "Crop Harvest Bubbles.",
   "UniqueID": "aedenthorn.CropWateringBubbles",
   "EntryDll": "CropWateringBubbles.dll",
   "MinimumApiVersion": "4.0.0",
-  "ModUpdater": {
-    "Repository": "StardewValleyMods",
-    "User": "aedenthorn",
-    "Directory": "_releases",
-    "ModFolder": "CropWateringBubbles"
-  },
-  "Dependencies": [
-    {
-      "UniqueID": "Platonymous.ModUpdater",
-      "IsRequired": false
-    }
-  ],
   "UpdateKeys": [ "Nexus:21428" ]
 }

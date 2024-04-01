@@ -54,7 +54,7 @@ namespace CropWateringBubbles
                     Vector2.Zero, 
                     4f * Config.SizePercent / 100f, 
                     SpriteEffects.None, 
-                    (tilePosition.Y * 64 + 33) / 10000f);
+                    (tilePosition.Y * 64 + 37) / 10000f);
             }
 
         }
