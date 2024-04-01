@@ -17,41 +17,49 @@ namespace CropWateringBubbles
 {
     public partial class ModEntry
     {
+        public void updateConstantEmote() {
+            GameTime time = Game1.currentGameTime;
+            
+            emoteInterval += time.ElapsedGameTime.Milliseconds;
+            if (emoteInterval < 250f) return;
+            if (currentEmoteFrame is >27 and <31) {
+                currentEmoteFrame++;
+            }
+            else currentEmoteFrame = 28;
+            emoteInterval = 0f;
+        }
         public void updateEmote()
         {
             GameTime time = Game1.currentGameTime;
-            if (isEmoting)
+
+            emoteInterval += time.ElapsedGameTime.Milliseconds;
+            if (emoteFading && emoteInterval > 20f)
             {
-                emoteInterval += (float)time.ElapsedGameTime.Milliseconds;
-                if (emoteFading && emoteInterval > 20f)
+                emoteInterval = 0f;
+                currentEmoteFrame--;
+                if (currentEmoteFrame < 0)
                 {
-                    emoteInterval = 0f;
-                    currentEmoteFrame--;
-                    if (currentEmoteFrame < 0)
-                    {
-                        emoteFading = false;
-                        isEmoting = false;
-                    }
+                    emoteFading = false;
+                    isEmoting = false;
                 }
-                else if (!emoteFading && emoteInterval > 20f && currentEmoteFrame <= 3)
+            }
+            else if (!emoteFading && emoteInterval > 20f && currentEmoteFrame <= 3)
+            {
+                emoteInterval = 0f;
+                currentEmoteFrame++;
+                if (currentEmoteFrame == 4)
                 {
-                    emoteInterval = 0f;
-                    currentEmoteFrame++;
-                    if (currentEmoteFrame == 4)
-                    {
-                        currentEmoteFrame = 28;
-                        return;
-                    }
+                    currentEmoteFrame = 28;
                 }
-                else if (!emoteFading && emoteInterval > 250f)
+            }
+            else if (!emoteFading && emoteInterval > 250f)
+            {
+                emoteInterval = 0f;
+                currentEmoteFrame++;
+                if (currentEmoteFrame >= 28 + 4)
                 {
-                    emoteInterval = 0f;
-                    currentEmoteFrame++;
-                    if (currentEmoteFrame >= 28 + 4)
-                    {
-                        emoteFading = true;
-                        currentEmoteFrame = 3;
-                    }
+                    emoteFading = true;
+                    currentEmoteFrame = 3;
                 }
             }
         }

@@ -66,15 +66,16 @@ namespace CropWateringBubbles
             {
                 isEmoting = false;
                 emoteFading = false;
-                currentEmoteFrame = 0;
+                currentEmoteFrame = 28;
                 emoteInterval = 0;
                 repeatInterval = 0;
                 return;
             }
-            if (isEmoting)
-            {
-                updateEmote();
+
+            if (Config.RepeatInterval == 0) {
+                updateConstantEmote();
             }
+            else if (isEmoting) updateEmote();
             else if (!Config.RequireKeyPress)
             {
                 if (repeatInterval <= 0)
@@ -122,7 +123,7 @@ namespace CropWateringBubbles
                 name: () => SHelper.Translation.Get("GMCM_Option_RepeatInterval_Name"),
                 getValue: () => Config.RepeatInterval,
                 setValue: value => Config.RepeatInterval = value,
-                min: 1,
+                min: 0,
                 max: 100
             );
 

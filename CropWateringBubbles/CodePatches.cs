@@ -31,7 +31,7 @@ namespace CropWateringBubbles
             public static void Postfix(HoeDirt __instance, SpriteBatch spriteBatch)
             {
                 if (!Config.ModEnabled ||
-                    !isEmoting || 
+                    (!isEmoting && Config.RepeatInterval != 0) || 
                     __instance.crop is null ||
                     __instance.crop.dead.Value ||
                     __instance.state.Value != 0 ||
@@ -39,7 +39,7 @@ namespace CropWateringBubbles
                     __instance.crop.isPaddyCrop() || 
                     (Config.OnlyWhenWatering && Game1.player.CurrentTool is not WateringCan))
                     return;
-                
+
                 Vector2 tilePosition = __instance.Tile;
                 Vector2 emotePosition = Game1.GlobalToLocal(tilePosition * 64);
                 float movePercent = (100 - Config.SizePercent) / 100f;
@@ -52,7 +52,8 @@ namespace CropWateringBubbles
                     Color.White * (Config.OpacityPercent / 100f), 
                     0f,
                     Vector2.Zero, 
-                    4f * Config.SizePercent / 100f, SpriteEffects.None, 
+                    4f * Config.SizePercent / 100f, 
+                    SpriteEffects.None, 
                     (tilePosition.Y * 64 + 33) / 10000f);
             }
 
