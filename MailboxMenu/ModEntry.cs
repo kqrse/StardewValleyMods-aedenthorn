@@ -19,6 +19,7 @@ namespace MailboxMenu
 
         public static ModEntry context;
         public static bool isMailServicesActive;
+        public static bool isWizardAWitch;
 
         public static string npcPath = "aedenthorn.MailboxMenu/npcs";
         public static string mailPath = "aedenthorn.MailboxMenu/letters";
@@ -65,12 +66,20 @@ namespace MailboxMenu
                 if (!string.IsNullOrEmpty(npcEnvelopeData[key].texturePath))
                     npcEnvelopeData[key].texture = Helper.GameContent.Load<Texture2D>(npcEnvelopeData[key].texturePath);
             }
+            
             envelopeData = Helper.GameContent.Load<Dictionary<string, EnvelopeData>>(mailPath);
             foreach (var key in envelopeData.Keys.ToArray())
             {
                 if(!string.IsNullOrEmpty(envelopeData[key].texturePath))
                     envelopeData[key].texture = Helper.GameContent.Load<Texture2D>(envelopeData[key].texturePath);
             }
+
+            if (isWizardAWitch) {
+                foreach (var data in envelopeData.Values.Where(data => data.sender == "Wizard")) {
+                    data.sender = "Witch";
+                }
+            }
+            
             if (!envelopeData.ContainsKey("default"))
             {
                 envelopeData["default"] = new EnvelopeData() { 
@@ -96,96 +105,103 @@ namespace MailboxMenu
 
         private void GameLoop_GameLaunched(object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
         {
+            SetupModCompatibility();
+        }
+
+        private void SetupModCompatibility() {
             var phone = Helper.ModRegistry.GetApi<IMobilePhoneApi>("JoXW.MobilePhone");
             phone?.AddApp("aedenthorn.MailboxMenu", "Mailbox", OpenMenu, Helper.ModContent.Load<Texture2D>(Path.Combine("assets", "icon.png")));
             
             isMailServicesActive = Helper.ModRegistry.IsLoaded("Digus.MailServicesMod");
-
-            // get Generic Mod Config Menu's API (if it's installed)
-            var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-            if (configMenu is null) return;
             
+            isWizardAWitch = Helper.ModRegistry.IsLoaded("Nom0ri.RomRas");
+
+            var configApi = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configApi is not null) SetupGMCM(configApi);
+        }
+        
+        private void SetupGMCM(IGenericModConfigMenuApi configApi) {
             // register mod
-            configMenu.Register(
+            configApi.Register(
                 mod: ModManifest,
                 reset: () => Config = new ModConfig(),
                 save: () => Helper.WriteConfig(Config)
             );
 
-            configMenu.AddBoolOption(
+            configApi.AddBoolOption(
                 mod: ModManifest,
                 name: () => "Mod Enabled",
                 getValue: () => Config.ModEnabled,
                 setValue: value => Config.ModEnabled = value
             );
-            configMenu.AddBoolOption(
+            configApi.AddBoolOption(
                 mod: ModManifest,
                 name: () => "Click Mailbox To Open",
                 getValue: () => Config.MenuOnMailbox,
                 setValue: value => Config.MenuOnMailbox = value
             );
-            configMenu.AddKeybind(
+            configApi.AddKeybind(
                 mod: ModManifest,
                 name: () => "Menu Key",
                 getValue: () => Config.MenuKey,
                 setValue: value => Config.MenuKey = value
             );
-            configMenu.AddKeybind(
+            configApi.AddKeybind(
                 mod: ModManifest,
                 name: () => "Mod Key",
                 tooltip: () => "Hold this down while interacting with the mailbox",
                 getValue: () => Config.ModKey,
                 setValue: value => Config.ModKey = value
             );
-            configMenu.AddTextOption(
+            configApi.AddTextOption(
                 mod: ModManifest,
                 name: () => "Inbox Text",
                 getValue: () => Config.InboxText,
                 setValue: value => Config.InboxText = value
             );
-            configMenu.AddTextOption(
+            configApi.AddTextOption(
                 mod: ModManifest,
                 name: () => "Archive Text",
                 getValue: () => Config.ArchiveText,
                 setValue: value => Config.ArchiveText = value
             );
-            configMenu.AddNumberOption(
+            configApi.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Window Width",
                 getValue: () => Config.WindowWidth,
                 setValue: value => Config.WindowWidth = value
             );
-            configMenu.AddNumberOption(
+            configApi.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Window Height",
                 getValue: () => Config.WindowHeight,
                 setValue: value => Config.WindowHeight = value
             );
-            configMenu.AddNumberOption(
+            configApi.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Grid Columns",
                 getValue: () => Config.GridColumns,
                 setValue: value => Config.GridColumns = value
             );
-            configMenu.AddNumberOption(
+            configApi.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Envelope Width",
                 getValue: () => Config.EnvelopeWidth,
                 setValue: value => Config.EnvelopeWidth = value
             );
-            configMenu.AddNumberOption(
+            configApi.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Envelope Height",
                 getValue: () => Config.EnvelopeHeight,
                 setValue: value => Config.EnvelopeHeight = value
             );
-            configMenu.AddNumberOption(
+            configApi.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Side Width",
                 getValue: () => Config.SideWidth,
                 setValue: value => Config.SideWidth = value
             );
-            configMenu.AddNumberOption(
+            configApi.AddNumberOption(
                 mod: ModManifest,
                 name: () => "Grid Spacing",
                 getValue: () => Config.GridSpace,

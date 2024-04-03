@@ -2,11 +2,12 @@
 
 namespace MailboxMenu
 {
-    public partial class ModEntry
-    {
-        public Dictionary<string, EnvelopeData> defaultMailSenders = new Dictionary<string, EnvelopeData>()
+    public partial class ModEntry {
+        
+        private readonly Dictionary<string, EnvelopeData> defaultMailSenders = new()
         {
-            { "Robin", new EnvelopeData() { sender = "Robin" } },{ "Demetrius", new EnvelopeData() { sender = "Demetrius" } },
+            { "Robin", new EnvelopeData() { sender = "Robin" } },
+            { "Demetrius", new EnvelopeData() { sender = "Demetrius" } },
             { "Linus", new EnvelopeData() { sender = "Linus" } },
             { "Pierre", new EnvelopeData() { sender = "Pierre" } },
             { "Caroline", new EnvelopeData() { sender = "Caroline" } },
@@ -179,7 +180,11 @@ namespace MailboxMenu
             { "passedOutIsland", new EnvelopeData() { sender = "Willy" } },
             { "passedOutIsland_Leo", new EnvelopeData() { sender = "Willy" } },
             { "guntherBones", new EnvelopeData() { sender = "Gunther" } },
-            { "LeoCooking", new EnvelopeData() { sender = "Willy" } }
+            { "LeoCooking", new EnvelopeData() { sender = "Willy" } },
+            { "GreenRainGus", new EnvelopeData() { sender = "Gus" } },
+            { "DesertFestival", new EnvelopeData() { sender = "Lewis" } },
+            { "MarniePetAdoption", new EnvelopeData() { sender = "Marnie" } },
+            { "MarniePetRejectedAdoption", new EnvelopeData() { sender = "Marnie" } },
         };
     }
 }
