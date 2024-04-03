@@ -100,7 +100,7 @@ namespace MailboxMenu
 
         private void GameLoop_GameLaunched(object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
         {
-            var phoneAPI = Helper.ModRegistry.GetApi<IMobilePhoneApi>("aedenthorn.MobilePhone");
+            var phoneAPI = Helper.ModRegistry.GetApi<IMobilePhoneApi>("JoXW.MobilePhone");
             if (phoneAPI != null)
             {
                 phoneAPI.AddApp("aedenthorn.MailboxMenu", "Mailbox", OpenMenu, Helper.ModContent.Load<Texture2D>(Path.Combine("assets", "icon.png")));
