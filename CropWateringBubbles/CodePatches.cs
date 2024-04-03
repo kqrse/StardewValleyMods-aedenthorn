@@ -1,25 +1,8 @@
-﻿using HarmonyLib;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using StardewValley;
-using StardewValley.Menus;
-using StardewValley.Network;
-using StardewValley.Objects;
-using StardewValley.Quests;
 using StardewValley.Tools;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Reflection;
-using xTile.Dimensions;
-using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using Object = StardewValley.Object;
-using StardewValley.Characters;
-using static StardewValley.Minigames.CraneGame;
-using StardewValley.Locations;
-using System.Text.RegularExpressions;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using StardewValley.TerrainFeatures;
 
 namespace CropWateringBubbles
@@ -36,7 +19,6 @@ namespace CropWateringBubbles
                     __instance.crop.dead.Value ||
                     __instance.state.Value != 0 ||
                     (__instance.crop.currentPhase.Value >= __instance.crop.phaseDays.Count - 1 && (!__instance.crop.fullyGrown.Value || __instance.crop.dayOfCurrentPhase.Value <= 0) && !CanBecomeGiant(__instance)) ||
-                    __instance.crop.isPaddyCrop() || 
                     (Config.OnlyWhenWatering && Game1.player.CurrentTool is not WateringCan))
                     return;
 

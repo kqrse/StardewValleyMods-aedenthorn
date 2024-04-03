@@ -1,13 +1,9 @@
 ﻿using HarmonyLib;
-using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.TerrainFeatures;
 using StardewValley.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CropWateringBubbles
 {
@@ -51,17 +47,17 @@ namespace CropWateringBubbles
             );
         }
 
-        private void Player_Warped(object sender, StardewModdingAPI.Events.WarpedEventArgs e)
+        private void Player_Warped(object sender, WarpedEventArgs e)
         {
             if (!e.Player.IsLocalPlayer)
                 return;
             isEmoting = false;
         }
 
-        private void GameLoop_UpdateTicked(object sender, StardewModdingAPI.Events.UpdateTickedEventArgs e)
+        private void GameLoop_UpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            if (!Config.ModEnabled)
-                return;
+            if (!Config.ModEnabled) return;
+            
             if (Config.OnlyWhenWatering && Game1.player.CurrentTool is not WateringCan)
             {
                 isEmoting = false;
@@ -97,7 +93,7 @@ namespace CropWateringBubbles
         }
 
 
-        private void GameLoop_GameLaunched(object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
+        private void GameLoop_GameLaunched(object sender, GameLaunchedEventArgs e)
         {
 
             // get Generic Mod Config Menu's API (if it's installed)
