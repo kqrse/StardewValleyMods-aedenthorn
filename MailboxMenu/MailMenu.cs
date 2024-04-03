@@ -19,11 +19,11 @@ namespace MailboxMenu
 
         public ClickableComponent inboxButton;
         public ClickableComponent allMailButton;
-        public List<ClickableTextureComponent> currentMailList = new List<ClickableTextureComponent>();
-        public List<ClickableComponent> senders = new List<ClickableComponent>();
-        public List<string> possibleSenders = new List<string>();
+        public List<ClickableTextureComponent> currentMailList = new();
+        public List<ClickableComponent> senders = new();
+        public List<string> possibleSenders = new();
         public int mailIndex = 99942000;
-        public Dictionary<string, string> mailTitles = new Dictionary<string, string>();
+        public Dictionary<string, string> mailTitles = new();
         public bool canScroll;
         public int lastVisibleMailId;
         public int contained;
@@ -82,24 +82,19 @@ namespace MailboxMenu
             Dictionary<string, string> mail = Game1.content.Load<Dictionary<string, string>>("Data\\mail");
             foreach (var id in Game1.player.mailReceived)
             {
-                if (!mail.ContainsKey(id))
-                    continue;
+                if (!mail.ContainsKey(id)) continue;
+                
                 if(ModEntry.envelopeData.TryGetValue(id, out EnvelopeData data) && !string.IsNullOrEmpty(data.sender))
                 {
-                    if(!possibleSenders.Contains(data.sender))
-                        possibleSenders.Add(data.sender);
+                    if(!possibleSenders.Contains(data.sender)) possibleSenders.Add(data.sender);
                 }
-                else
-                {
-                    addUnknown = true;
-                }
+                else addUnknown = true;
             }
             var textHeight = (int)Game1.dialogueFont.MeasureString(ModEntry.Config.InboxText).Y;
             var textHeight2 = (int)Game1.smallFont.MeasureString(ModEntry.Config.InboxText).Y;
             int count = (height - borderWidth * 2 - 64 - (textHeight + 8) * 2) / textHeight2;
             possibleSenders.Sort();
-            if (addUnknown)
-                possibleSenders.Add("???");
+            if (addUnknown) possibleSenders.Add("???");
             var list = possibleSenders.Skip(sideScrolled).Take(count).ToList();
             for (int i = 0; i < list.Count; i++)
             {

@@ -22,8 +22,8 @@ namespace MailboxMenu
 
         public static string npcPath = "aedenthorn.MailboxMenu/npcs";
         public static string mailPath = "aedenthorn.MailboxMenu/letters";
-        public static Dictionary<string, EnvelopeData> envelopeData = new Dictionary<string, EnvelopeData>();
-        public static Dictionary<string, EnvelopeData> npcEnvelopeData = new Dictionary<string, EnvelopeData>();
+        public static Dictionary<string, EnvelopeData> envelopeData = new();
+        public static Dictionary<string, EnvelopeData> npcEnvelopeData = new();
 
         /// <summary>The mod entry point, called after the mod is first loaded.</summary>
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
@@ -53,12 +53,8 @@ namespace MailboxMenu
 
         private void Input_ButtonPressed(object sender, StardewModdingAPI.Events.ButtonPressedEventArgs e)
         {
-            if (!Config.ModEnabled)
-                return;
-            if(e.Button == Config.MenuKey)
-            {
-                OpenMenu();
-            }
+            if (!Config.ModEnabled) return;
+            if (e.Button == Config.MenuKey) OpenMenu();
         }
 
         private void GameLoop_DayStarted(object sender, StardewModdingAPI.Events.DayStartedEventArgs e)
@@ -100,19 +96,15 @@ namespace MailboxMenu
 
         private void GameLoop_GameLaunched(object sender, StardewModdingAPI.Events.GameLaunchedEventArgs e)
         {
-            var phoneAPI = Helper.ModRegistry.GetApi<IMobilePhoneApi>("JoXW.MobilePhone");
-            if (phoneAPI != null)
-            {
-                phoneAPI.AddApp("aedenthorn.MailboxMenu", "Mailbox", OpenMenu, Helper.ModContent.Load<Texture2D>(Path.Combine("assets", "icon.png")));
-            }
+            var phone = Helper.ModRegistry.GetApi<IMobilePhoneApi>("JoXW.MobilePhone");
+            phone?.AddApp("aedenthorn.MailboxMenu", "Mailbox", OpenMenu, Helper.ModContent.Load<Texture2D>(Path.Combine("assets", "icon.png")));
             
-            // get Generic Mod Config Menu's API (if it's installed)
-            var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-            if (configMenu is null)
-                return;
-
             isMailServicesActive = Helper.ModRegistry.IsLoaded("Digus.MailServicesMod");
 
+            // get Generic Mod Config Menu's API (if it's installed)
+            var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configMenu is null) return;
+            
             // register mod
             configMenu.Register(
                 mod: ModManifest,
