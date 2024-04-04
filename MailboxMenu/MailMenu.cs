@@ -129,13 +129,11 @@ namespace MailboxMenu
             }
             else
             {
-                List<string> strings = new List<string>();
                 int count = 0;
                 foreach (var id in Game1.player.mailReceived) {
-                    if (!mail.TryGetValue(id, out string mailData))
-                        continue;
-                    if (Game1.mailbox.Contains(id))
-                        continue;
+                    if (!mail.TryGetValue(id, out string mailData))continue;
+                    if (Game1.mailbox.Contains(id)) continue;
+                    
                     if (whichSender is not null)
                     {
                         if (ModEntry.envelopeData.TryGetValue(id, out EnvelopeData data))
@@ -158,16 +156,20 @@ namespace MailboxMenu
             populateClickableComponentList();
         }
 
+        private string GenerateMailTitle(string mailData) {
+            if (mailData.Length == 0) return "???";
+            
+            var formattedMailData = mailData.Replace("^", " ").Replace("@", Game1.player.Name);
+            return formattedMailData;
+        }
+
         private void AddMail(string id, int i, string mailData)
         {
-            if (!mailTitles.ContainsKey(id))
-            {
-                string[] split = mailData.Split(new string[]
-                {
-                "[#]"
-                }, StringSplitOptions.None);
-                mailTitles[id] = split.Length > 1 ? split[1] : "???";
+            if (!mailTitles.ContainsKey(id)) {
+                string[] split = mailData.Split(new[] { "[#]" }, StringSplitOptions.None);
+                mailTitles[id] = split.Length > 1 ? split[1] : GenerateMailTitle(mailData);
             }
+
             var gridX = i % ModEntry.Config.GridColumns;
             var gridY = i / ModEntry.Config.GridColumns;
             Texture2D texture;
@@ -276,6 +278,11 @@ namespace MailboxMenu
             }
             base.applyMovementKey(direction);
         }
+
+        private float GetTitleYOffset() {
+            return ModEntry.isZilchEnvelopesActive ? -0.75f : 0.5f;
+        }
+        
         public override void draw(SpriteBatch b)
         {
             canScroll = false;
@@ -318,8 +325,10 @@ namespace MailboxMenu
                 var s = mailTitles[cc.name];
                 var scale = 1f;
                 var split = s.Split(' ');
-                int lines = 0;
-                for(int i = 0; i < split.Length; i++)
+                var maxLines = Math.Min(split.Length, 5);
+                int currentLineCount = 0;
+                
+                for(int i = 0; i < maxLines; i++)
                 {
                     string str = split[i];
                     if(i < split.Length - 1 && Game1.smallFont.MeasureString(str + " " + split[i + 1]).X < cc.bounds.Width * 1.5f)
@@ -329,21 +338,25 @@ namespace MailboxMenu
                     }
                     var m = Game1.smallFont.MeasureString(str) * scale;
                     
-                    var y = cc.bounds.Y + cc.bounds.Height + (int)(m.Y * (lines * 0.8f + 0.5f));
+                    var y = cc.bounds.Y + cc.bounds.Height + (int)(m.Y * (currentLineCount * 0.8f + GetTitleYOffset()));
+                    
                     if (y + m.Y > cutoff)
                     {
                         canScroll = true;
                         break;
                     }
+
+                    if (i == maxLines) str += "...";
                     b.DrawString(Game1.smallFont, str, new Vector2(cc.bounds.X + (cc.bounds.Width - m.X) / 2 - 1, y + 1), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 1f);
                     b.DrawString(Game1.smallFont, str, new Vector2(cc.bounds.X + (cc.bounds.Width - m.X) / 2, y), Color.Black, 0, Vector2.Zero, scale, SpriteEffects.None, 1f);
-                    lines++;
+                    currentLineCount++;
                 }
             }
             SpriteText.drawString(b, ModEntry.Config.InboxText, inboxButton.bounds.X, inboxButton.bounds.Y, 
                 color: whichTab == 0 ? Color.Black : Color.DarkGray);
             SpriteText.drawString(b, ModEntry.Config.ArchiveText, allMailButton.bounds.X, allMailButton.bounds.Y, 
                 color: whichTab == 1 ? Color.Black : Color.DarkGray);
+            
             for(int i = 0; i < senders.Count; i++)
             {
                 string str = senders[i].name;

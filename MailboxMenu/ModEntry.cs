@@ -20,6 +20,7 @@ namespace MailboxMenu
         public static ModEntry context;
         public static bool isMailServicesActive;
         public static bool isWizardAWitch;
+        public static bool isZilchEnvelopesActive;
 
         public static string npcPath = "aedenthorn.MailboxMenu/npcs";
         public static string mailPath = "aedenthorn.MailboxMenu/letters";
@@ -113,7 +114,7 @@ namespace MailboxMenu
             phone?.AddApp("aedenthorn.MailboxMenu", "Mailbox", OpenMenu, Helper.ModContent.Load<Texture2D>(Path.Combine("assets", "icon.png")));
             
             isMailServicesActive = Helper.ModRegistry.IsLoaded("Digus.MailServicesMod");
-            
+            isZilchEnvelopesActive = Helper.ModRegistry.IsLoaded("Zilch.MBMenvelopes");
             isWizardAWitch = Helper.ModRegistry.IsLoaded("Nom0ri.RomRas");
 
             var configApi = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
