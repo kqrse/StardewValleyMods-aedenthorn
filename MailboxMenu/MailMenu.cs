@@ -279,10 +279,6 @@ namespace MailboxMenu
             base.applyMovementKey(direction);
         }
 
-        private float GetTitleYOffset() {
-            return ModEntry.isZilchEnvelopesActive ? -0.75f : 0.5f;
-        }
-        
         public override void draw(SpriteBatch b)
         {
             canScroll = false;
@@ -338,7 +334,7 @@ namespace MailboxMenu
                     }
                     var m = Game1.smallFont.MeasureString(str) * scale;
                     
-                    var y = cc.bounds.Y + cc.bounds.Height + (int)(m.Y * (currentLineCount * 0.8f + GetTitleYOffset()));
+                    var y = cc.bounds.Y + cc.bounds.Height + (int)(m.Y * (currentLineCount * 0.8f + 0.5f));
                     
                     if (y + m.Y > cutoff)
                     {
