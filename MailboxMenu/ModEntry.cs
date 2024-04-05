@@ -62,20 +62,21 @@ namespace MailboxMenu
             npcEnvelopeData = Helper.GameContent.Load<Dictionary<string, EnvelopeData>>(npcPath);
             foreach (var key in npcEnvelopeData.Keys.ToArray())
             {
-                if (!string.IsNullOrEmpty(npcEnvelopeData[key].texturePath))
+                if (!string.IsNullOrEmpty(npcEnvelopeData[key].texturePath)) 
                     npcEnvelopeData[key].texture = Helper.GameContent.Load<Texture2D>(npcEnvelopeData[key].texturePath);
             }
             
             envelopeData = Helper.GameContent.Load<Dictionary<string, EnvelopeData>>(mailPath);
             foreach (var key in envelopeData.Keys.ToArray())
             {
-                if(!string.IsNullOrEmpty(envelopeData[key].texturePath))
+                if (!string.IsNullOrEmpty(envelopeData[key].texturePath)) 
                     envelopeData[key].texture = Helper.GameContent.Load<Texture2D>(envelopeData[key].texturePath);
             }
 
             if (isWizardAWitch) {
                 foreach (var data in envelopeData.Values.Where(data => data.sender == "Wizard")) {
                     data.sender = "Witch";
+                    data.texture = Helper.GameContent.Load<Texture2D>("aedenthorn.CPMBMEnvelopes/Wizard");
                 }
             }
             
