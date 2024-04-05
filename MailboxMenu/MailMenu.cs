@@ -216,7 +216,17 @@ namespace MailboxMenu
                 textureBounds.Size = new Point(data.frameWidth, texture.Height);
             }
             int xOffset =  Math.Max(0, (width - (borderWidth * 2 + ModEntry.Config.SideWidth) - (ModEntry.Config.EnvelopeWidth + ModEntry.Config.GridSpace) * ModEntry.Config.GridColumns) / 2);
-            currentMailList.Add(new ClickableTextureComponent(id, new Rectangle(xPositionOnScreen + borderWidth * 2 + ModEntry.Config.SideWidth + xOffset + gridX * (ModEntry.Config.EnvelopeWidth + ModEntry.Config.GridSpace), yPositionOnScreen + borderWidth + 132 + gridY * (ModEntry.Config.EnvelopeHeight + ModEntry.Config.GridSpace + 16), ModEntry.Config.EnvelopeWidth, ModEntry.Config.EnvelopeHeight), "", "", texture, textureBounds, data.scale, false)
+            currentMailList.Add(new ClickableTextureComponent(id, 
+                new Rectangle(
+                    xPositionOnScreen + borderWidth * 2 + ModEntry.Config.SideWidth + xOffset + gridX * (ModEntry.Config.EnvelopeWidth + ModEntry.Config.GridSpace),
+                    yPositionOnScreen + borderWidth + 132 + gridY * (ModEntry.Config.EnvelopeHeight + ModEntry.Config.GridSpace + 16 + ModEntry.Config.RowSpace),
+                    ModEntry.Config.EnvelopeWidth,
+                    ModEntry.Config.EnvelopeHeight), 
+                "", 
+                "",
+                texture, 
+                textureBounds,
+                data.scale)
             {
                 hoverText = mailTitles[id],
                 myID = mailIndex + i,

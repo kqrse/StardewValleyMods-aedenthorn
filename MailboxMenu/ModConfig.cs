@@ -19,6 +19,7 @@ namespace MailboxMenu
         public int EnvelopeWidth { get; set; } = 256;
         public int EnvelopeHeight { get; set; } = 192;
         public int SideWidth { get; set; } = 194;
+        public int RowSpace { get; set; } = 0;
         public int GridSpace { get; set; } = 64;
 
     }

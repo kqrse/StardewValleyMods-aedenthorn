@@ -201,6 +201,12 @@ namespace MailboxMenu
             );
             configApi.AddNumberOption(
                 mod: ModManifest,
+                name: () => "Row Spacing",
+                getValue: () => Config.RowSpace,
+                setValue: value => Config.RowSpace = value
+            );
+            configApi.AddNumberOption(
+                mod: ModManifest,
                 name: () => "Grid Spacing",
                 getValue: () => Config.GridSpace,
                 setValue: value => Config.GridSpace = value
