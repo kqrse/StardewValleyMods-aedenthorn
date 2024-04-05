@@ -158,7 +158,7 @@ namespace MailboxMenu
         }
 
         private string GenerateMailTitle(string mailData) {
-            if (mailData.Length == 0 || ModEntry.Config.MakeshiftTitlesEnabled) return "???";
+            if (mailData.Length == 0 || !ModEntry.Config.MakeshiftTitlesEnabled) return "???";
             
             var formattedMailData = mailData.Replace("^", " ").Replace("@", Game1.player.Name);
             return formattedMailData;
@@ -332,16 +332,17 @@ namespace MailboxMenu
                 var currentMailTitle = mailTitles[cc.name];
                 var scale = 1f;
                 var words = currentMailTitle.Split(' ');
-                var maxWords = Math.Min(words.Length, ModEntry.Config.TitleWordLimit);
+                var maxWords = words.Length;
                 int currentLineCount = 0;
                 
-                for(int i = 0; i < maxWords; i++)
-                {
-                    string str = words[i];
-                    if(i < words.Length - 1 && Game1.smallFont.MeasureString(str + " " + words[i + 1]).X < cc.bounds.Width * 1.5f)
+                for(int wordIndex = 0; wordIndex < maxWords; wordIndex++) {
+                    if (currentLineCount == ModEntry.Config.TitleMaxLineLimit) break;
+                    
+                    string str = words[wordIndex];
+                    if(wordIndex < words.Length - 1 && Game1.smallFont.MeasureString(str + " " + words[wordIndex + 1]).X < cc.bounds.Width * 1.5f)
                     {
-                        str += " " + words[i + 1];
-                        i++;
+                        str += " " + words[wordIndex + 1];
+                        wordIndex++;
                     }
                     var m = Game1.smallFont.MeasureString(str) * scale;
                     
@@ -353,7 +354,7 @@ namespace MailboxMenu
                         break;
                     }
 
-                    if (i == maxWords && words.Length > maxWords) str += "...";
+                    if (currentLineCount == ModEntry.Config.TitleMaxLineLimit-1 && wordIndex < maxWords-1) str += "...";
                     b.DrawString(Game1.smallFont, str, new Vector2(cc.bounds.X + (cc.bounds.Width - m.X) / 2 - 1, y + 1), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 1f);
                     b.DrawString(Game1.smallFont, str, new Vector2(cc.bounds.X + (cc.bounds.Width - m.X) / 2, y), Color.Black, 0, Vector2.Zero, scale, SpriteEffects.None, 1f);
                     currentLineCount++;

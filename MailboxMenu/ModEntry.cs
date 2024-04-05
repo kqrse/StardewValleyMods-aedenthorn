@@ -76,9 +76,6 @@ namespace MailboxMenu
             if (isWizardAWitch) {
                 foreach (var data in envelopeData.Values.Where(data => data.sender == "Wizard")) {
                     data.sender = "Witch";
-                    
-                    if (Config.WizardEnvelopeForWitchEnabled) 
-                        data.texture = Helper.GameContent.Load<Texture2D>("aedenthorn.CPMBMEnvelopes/Wizard");
                 }
             }
             
@@ -180,9 +177,9 @@ namespace MailboxMenu
             );
             configApi.AddNumberOption(
                 mod: ModManifest,
-                name: () => "Mail Title Word Limit",
-                getValue: () => Config.TitleWordLimit,
-                setValue: value => Config.TitleWordLimit = value,
+                name: () => "Mail Title Line Limit",
+                getValue: () => Config.TitleMaxLineLimit,
+                setValue: value => Config.TitleMaxLineLimit = value,
                 min: 1,
                 max: 10
             );
@@ -222,17 +219,17 @@ namespace MailboxMenu
                 getValue: () => Config.GridSpace,
                 setValue: value => Config.GridSpace = value
             );
-            configApi.AddBoolOption(
+            
+            configApi.AddSectionTitle(
                 mod: ModManifest,
-                name: () => "Experimental: Use makeshift mail titles instead of '???'",
-                getValue: () => Config.MakeshiftTitlesEnabled,
-                setValue: value => Config.MakeshiftTitlesEnabled = value
+                text: () => "Experimental Options"
             );
             configApi.AddBoolOption(
                 mod: ModManifest,
-                name: () => "Experimental: Display Wizard custom envelope for Witch",
-                getValue: () => Config.WizardEnvelopeForWitchEnabled,
-                setValue: value => Config.WizardEnvelopeForWitchEnabled = value
+                name: () => "Makeshift titles instead of ???",
+                tooltip: () => "Generates makeshift mail titles using mail content instead of displaying ???",
+                getValue: () => Config.MakeshiftTitlesEnabled,
+                setValue: value => Config.MakeshiftTitlesEnabled = value
             );
         }
 

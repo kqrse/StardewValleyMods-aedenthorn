@@ -14,7 +14,7 @@ namespace MailboxMenu
         public string ArchiveText { get; set; } = "Old Mail";
         public int WindowWidth { get; set; } = 1600;
         public int WindowHeight { get; set; } = 1000;
-        public int TitleWordLimit { get; set; } = 5;
+        public int TitleMaxLineLimit { get; set; } = 3;
 
         public int GridColumns { get; set; } = 4;
         public int EnvelopeWidth { get; set; } = 256;
@@ -24,6 +24,5 @@ namespace MailboxMenu
         public int GridSpace { get; set; } = 64;
         
         public bool MakeshiftTitlesEnabled { get; set; }
-        public bool WizardEnvelopeForWitchEnabled { get; set; }
     }
 }
