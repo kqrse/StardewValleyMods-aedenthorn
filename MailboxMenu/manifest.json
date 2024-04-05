@@ -1,7 +1,7 @@
 ﻿{
   "Name": "Mailbox Menu",
   "Author": "aedenthorn",
-  "Version": "0.3.8",
+  "Version": "0.3.8-beta",
   "Description": "Mailbox Menu.",
   "UniqueID": "kqrse.MailboxMenu",
   "EntryDll": "MailboxMenu.dll",

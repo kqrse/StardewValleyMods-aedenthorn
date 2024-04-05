@@ -6,6 +6,7 @@ using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StardewModdingAPI;
 
 namespace MailboxMenu
 {
@@ -157,7 +158,7 @@ namespace MailboxMenu
         }
 
         private string GenerateMailTitle(string mailData) {
-            if (mailData.Length == 0) return "???";
+            if (mailData.Length == 0 || ModEntry.Config.MakeshiftTitlesEnabled) return "???";
             
             var formattedMailData = mailData.Replace("^", " ").Replace("@", Game1.player.Name);
             return formattedMailData;
