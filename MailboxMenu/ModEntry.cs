@@ -180,6 +180,14 @@ namespace MailboxMenu
             );
             configApi.AddNumberOption(
                 mod: ModManifest,
+                name: () => "Mail Title Word Limit",
+                getValue: () => Config.TitleWordLimit,
+                setValue: value => Config.TitleWordLimit = value,
+                min: 1,
+                max: 10
+            );
+            configApi.AddNumberOption(
+                mod: ModManifest,
                 name: () => "Grid Columns",
                 getValue: () => Config.GridColumns,
                 setValue: value => Config.GridColumns = value

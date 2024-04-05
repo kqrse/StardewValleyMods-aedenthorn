@@ -329,18 +329,18 @@ namespace MailboxMenu
                     lastVisibleMailId = cc.myID;
                     cc.draw(b, Color.White, 1, frameOffset);
                 }
-                var s = mailTitles[cc.name];
+                var currentMailTitle = mailTitles[cc.name];
                 var scale = 1f;
-                var split = s.Split(' ');
-                var maxLines = Math.Min(split.Length, 5);
+                var words = currentMailTitle.Split(' ');
+                var maxWords = Math.Min(words.Length, ModEntry.Config.TitleWordLimit);
                 int currentLineCount = 0;
                 
-                for(int i = 0; i < maxLines; i++)
+                for(int i = 0; i < maxWords; i++)
                 {
-                    string str = split[i];
-                    if(i < split.Length - 1 && Game1.smallFont.MeasureString(str + " " + split[i + 1]).X < cc.bounds.Width * 1.5f)
+                    string str = words[i];
+                    if(i < words.Length - 1 && Game1.smallFont.MeasureString(str + " " + words[i + 1]).X < cc.bounds.Width * 1.5f)
                     {
-                        str += " " + split[i + 1];
+                        str += " " + words[i + 1];
                         i++;
                     }
                     var m = Game1.smallFont.MeasureString(str) * scale;
@@ -353,7 +353,7 @@ namespace MailboxMenu
                         break;
                     }
 
-                    if (i == maxLines) str += "...";
+                    if (i == maxWords && words.Length > maxWords) str += "...";
                     b.DrawString(Game1.smallFont, str, new Vector2(cc.bounds.X + (cc.bounds.Width - m.X) / 2 - 1, y + 1), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 1f);
                     b.DrawString(Game1.smallFont, str, new Vector2(cc.bounds.X + (cc.bounds.Width - m.X) / 2, y), Color.Black, 0, Vector2.Zero, scale, SpriteEffects.None, 1f);
                     currentLineCount++;

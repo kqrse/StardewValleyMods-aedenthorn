@@ -8,14 +8,13 @@ namespace MailboxMenu
     {
         public bool ModEnabled { get; set; } = true;
         public bool MenuOnMailbox { get; set; } = true;
-        public bool MakeshiftTitlesEnabled { get; set; }
-        public bool WizardEnvelopeForWitchEnabled { get; set; }
         public SButton ModKey { get; set; } = SButton.None;
         public SButton MenuKey { get; set; } = SButton.F15;
         public string InboxText { get; set; } = "Mailbox";
         public string ArchiveText { get; set; } = "Old Mail";
         public int WindowWidth { get; set; } = 1600;
         public int WindowHeight { get; set; } = 1000;
+        public int TitleWordLimit { get; set; } = 5;
 
         public int GridColumns { get; set; } = 4;
         public int EnvelopeWidth { get; set; } = 256;
@@ -23,6 +22,8 @@ namespace MailboxMenu
         public int SideWidth { get; set; } = 194;
         public int RowSpace { get; set; } = 0;
         public int GridSpace { get; set; } = 64;
-
+        
+        public bool MakeshiftTitlesEnabled { get; set; }
+        public bool WizardEnvelopeForWitchEnabled { get; set; }
     }
 }
