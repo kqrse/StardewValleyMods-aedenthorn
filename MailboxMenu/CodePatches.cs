@@ -1,7 +1,6 @@
-﻿using HarmonyLib;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewValley;
-using System.Collections.Generic;
+using System.Linq;
 using StardewValley.Tools;
 
 namespace MailboxMenu
@@ -28,32 +27,21 @@ namespace MailboxMenu
                     UsingMailServices()) 
                     return true;
                 
-                List<string> list = new List<string>();
-                foreach(var str in Game1.mailbox)
-                {
-                    if (GetMailString(str) == "")
-                    {
-                        list.Add(str);
-                    }
+                var list = Game1.mailbox.Where(str => GetMailString(str) == "").ToList();
+
+                if (list.Count == 0) {
+                    Game1.activeClickableMenu = new MailMenu();
+                    return false;
                 }
-                
-                if(list.Count > 0) 
-                {
-                    foreach (var str in Game1.mailbox)
-                    {
-                        if (!list.Contains(str))
-                            list.Add(str);
-                    }
-                    Game1.mailbox.Clear();
-                    foreach (var str in list)
-                    {
-                        Game1.mailbox.Add(str);
-                    }
-                    return true;
+
+                foreach (var str in Game1.mailbox) {
+                    if (!list.Contains(str)) list.Add(str);
                 }
+
+                Game1.mailbox.Clear();
+                foreach (var str in list) Game1.mailbox.Add(str);
                 
-                Game1.activeClickableMenu = new MailMenu();
-                return false;
+                return true;
             }
         }
     }

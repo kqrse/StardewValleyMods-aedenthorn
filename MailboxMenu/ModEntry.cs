@@ -5,10 +5,10 @@ using StardewValley;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MailboxMenu.apis;
 
 namespace MailboxMenu
 {
-    /// <summary>The mod entry point.</summary>
     public partial class ModEntry : Mod
     {
 
@@ -24,9 +24,7 @@ namespace MailboxMenu
         public static string mailPath = "aedenthorn.MailboxMenu/letters";
         public static Dictionary<string, EnvelopeData> envelopeData = new();
         public static Dictionary<string, EnvelopeData> npcEnvelopeData = new();
-
-        /// <summary>The mod entry point, called after the mod is first loaded.</summary>
-        /// <param name="helper">Provides simplified APIs for writing mods.</param>
+        
         public override void Entry(IModHelper helper)
         {
             Config = Helper.ReadConfig<ModConfig>();
@@ -115,11 +113,10 @@ namespace MailboxMenu
             isWizardAWitch = Helper.ModRegistry.IsLoaded("Nom0ri.RomRas");
 
             var configApi = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-            if (configApi is not null) SetupGMCM(configApi);
+            if (configApi is not null) SetupModConfig(configApi);
         }
         
-        private void SetupGMCM(IGenericModConfigMenuApi configApi) {
-            // register mod
+        private void SetupModConfig(IGenericModConfigMenuApi configApi) {
             configApi.Register(
                 mod: ModManifest,
                 reset: () => Config = new ModConfig(),
