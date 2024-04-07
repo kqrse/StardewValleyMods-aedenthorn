@@ -96,10 +96,17 @@ namespace MailboxMenu
             int count = (height - borderWidth * 2 - 64 - (textHeight + 8) * 2) / textHeight2;
             possibleSenders.Sort();
             if (addUnknown) possibleSenders.Add("???");
-            var list = possibleSenders.Skip(sideScrolled).Take(count).ToList();
-            for (int i = 0; i < list.Count; i++)
+            var possibleSenderList = possibleSenders.Skip(sideScrolled).Take(count).ToList();
+
+            var npcNames = Game1.content.Load<Dictionary<string, string>>("Strings\\NPCNames");
+            var characterNames = Game1.content.Load<Dictionary<string, string>>("Strings\\Characters");
+
+            var localizedPossibleSenderList = possibleSenderList.Select(senderName => GetLocalizedSenderName(senderName, npcNames, characterNames)).ToList();
+            localizedPossibleSenderList.Sort();
+            
+            for (int i = 0; i < localizedPossibleSenderList.Count; i++)
             {
-                senders.Add(new ClickableComponent(new Rectangle(xPositionOnScreen + borderWidth + 16, yPositionOnScreen + borderWidth + 64 + (textHeight + 8) * 2 + i * textHeight2, ModEntry.Config.SideWidth - borderWidth / 2, textHeight2), list[i])
+                senders.Add(new ClickableComponent(new Rectangle(xPositionOnScreen + borderWidth + 16, yPositionOnScreen + borderWidth + 64 + (textHeight + 8) * 2 + i * textHeight2, ModEntry.Config.SideWidth - borderWidth / 2, textHeight2), localizedPossibleSenderList[i])
                 {
                     myID = 902 + i,
                     upNeighborID = 902 + i - 1,
@@ -108,6 +115,7 @@ namespace MailboxMenu
                     region = 42
                 });
             }
+
             populateClickableComponentList();
         }
 
@@ -365,27 +373,66 @@ namespace MailboxMenu
             SpriteText.drawString(b, ModEntry.Config.ArchiveText, allMailButton.bounds.X, allMailButton.bounds.Y, 
                 color: whichTab == 1 ? Color.Black : Color.DarkGray);
             
-            for(int i = 0; i < senders.Count; i++)
-            {
-                string str = senders[i].name;
+            foreach (var senderComponent in senders) {
+                var senderName = senderComponent.name;
+
                 int cut = 0;
-                if(Game1.smallFont.MeasureString(str).X > ModEntry.Config.SideWidth)
+                if(Game1.smallFont.MeasureString(senderName).X > ModEntry.Config.SideWidth)
                 {
                     do
                     {
                         cut++;
-                        str = str.Substring(0, str.Length - cut);
+                        senderName = senderName.Substring(0, senderName.Length - cut);
                     }
-                    while (Game1.smallFont.MeasureString(str + "...").X > ModEntry.Config.SideWidth);
-                    str += "...";
+                    while (Game1.smallFont.MeasureString(senderName + "...").X > ModEntry.Config.SideWidth);
+                    senderName += "...";
                 }
 
-                b.DrawString(Game1.smallFont, str, new Vector2(senders[i].bounds.X + senders[i].bounds.Width - Game1.smallFont.MeasureString(str).X - 1, senders[i].bounds.Y + 1), whichSender == senders[i].name ? new Color(50, 50, 50, 255) : new Color(75, 75, 75, 255));
-                b.DrawString(Game1.smallFont, str, new Vector2(senders[i].bounds.X + senders[i].bounds.Width - Game1.smallFont.MeasureString(str).X, senders[i].bounds.Y), whichSender == senders[i].name ? Color.Black : new Color(100, 100, 100, 255));
+                b.DrawString(Game1.smallFont, senderName, new Vector2(senderComponent.bounds.X + senderComponent.bounds.Width - Game1.smallFont.MeasureString(senderName).X - 1, senderComponent.bounds.Y + 1), whichSender == GetEnglishSenderName(senderComponent.name) ? new Color(50, 50, 50, 255) : new Color(75, 75, 75, 255));
+                b.DrawString(Game1.smallFont, senderName, new Vector2(senderComponent.bounds.X + senderComponent.bounds.Width - Game1.smallFont.MeasureString(senderName).X, senderComponent.bounds.Y), whichSender == GetEnglishSenderName(senderComponent.name) ? Color.Black : new Color(100, 100, 100, 255));
             }
             drawMouse(b);
             base.draw(b);
         }
+        
+        private string GetLocalizedSenderName(string senderName, Dictionary<string, string> npcNames, Dictionary<string, string> characterNames) {
+            if (senderName is "???" or "#") return senderName;
+            
+            if (npcNames.TryGetValue(senderName, out var localizedNpcName)) {
+                return localizedNpcName;
+            }
+
+            if (senderName is "Mom" or "Dad") {
+                senderName = characterNames.GetValueOrDefault("Relative_" + senderName, senderName);
+                return senderName.ToUpper()[0] + senderName[1..];
+            }
+
+            ModEntry.SMonitor.Log("Unexpected name: " + senderName, LogLevel.Error);
+            return senderName;
+        }
+
+        private string GetEnglishSenderName(string senderName) {
+            if (senderName is "???" or "#") return senderName;
+            
+            var npcNames = Game1.content.Load<Dictionary<string, string>>("Strings\\NPCNames");
+            var characterNames = Game1.content.Load<Dictionary<string, string>>("Strings\\Characters");
+
+            var englishName = senderName;
+            
+            foreach (var kvp in npcNames.Where(kvp => senderName == kvp.Value)) {
+                englishName = kvp.Key;
+                break;
+            }
+            
+            foreach (var kvp in characterNames.Where(kvp => senderName.ToLower() == kvp.Value)) {
+                englishName = kvp.Key;
+                englishName = englishName.Split('_')[1];
+                break;
+            }
+
+            return englishName;
+        }
+
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
             if (inboxButton.containsPoint(x, y))
@@ -415,7 +462,7 @@ namespace MailboxMenu
                 if(senders[i].containsPoint(x, y))
                 {
                     whichTab = 1;
-                    whichSender = senders[i].name;
+                    whichSender = GetEnglishSenderName(senders[i].name);
                     ModEntry.SMonitor.Log($"clicked on {senders[i].name}");
                     Game1.playSound("bigSelect");
                     PopulateMailList();
