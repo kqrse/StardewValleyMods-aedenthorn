@@ -71,7 +71,7 @@ namespace MailboxMenu
                     envelopeData[key].texture = Helper.GameContent.Load<Texture2D>(envelopeData[key].texturePath);
             }
 
-            if (isWizardAWitch) {
+            if (isWizardAWitch && Config.IsWizardAWitch) {
                 foreach (var data in envelopeData.Values.Where(data => data.sender == "Wizard")) {
                     data.sender = "Witch";
                 }
@@ -215,6 +215,13 @@ namespace MailboxMenu
                 name: () => "Grid Spacing",
                 getValue: () => Config.GridSpace,
                 setValue: value => Config.GridSpace = value
+            );
+            configApi.AddBoolOption(
+                mod: ModManifest,
+                name: () => "Witch instead of Wizard",
+                tooltip: () => "Only works for English, requires restarting day",
+                getValue: () => Config.IsWizardAWitch,
+                setValue: value => Config.IsWizardAWitch = value
             );
             
             configApi.AddSectionTitle(

@@ -22,5 +22,6 @@ namespace MailboxMenu
         public int GridSpace { get; set; } = 64;
         
         public bool MakeshiftTitlesEnabled { get; set; }
+        public bool IsWizardAWitch { get; set; }
     }
 }
