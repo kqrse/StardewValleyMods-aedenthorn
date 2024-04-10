@@ -150,13 +150,9 @@ namespace MailboxMenu
                     {
                         if (ModEntry.envelopeData.TryGetValue(id, out EnvelopeData data))
                         {
-                            if(data.sender != whichSender)
-                                continue;
+                            if(data.sender != whichSender) continue;
                         }
-                        else if(whichSender != "???") 
-                        {
-                            continue;
-                        }
+                        else if(whichSender != "???") continue;
                     }
                     if (count >= mainScrolled * ModEntry.Config.GridColumns)
                     {
@@ -185,6 +181,7 @@ namespace MailboxMenu
             var gridX = i % ModEntry.Config.GridColumns;
             var gridY = i / ModEntry.Config.GridColumns;
             Texture2D texture;
+            
             if (ModEntry.envelopeData.TryGetValue(id, out EnvelopeData data))
             {
                 if (data.texture is not null)
@@ -303,7 +300,7 @@ namespace MailboxMenu
         {
             canScroll = false;
             Game1.drawDialogueBox(xPositionOnScreen, yPositionOnScreen, width, height, false, true, null, false, false);
-            b.Draw(Game1.mouseCursors, new Rectangle(xPositionOnScreen + borderWidth + ModEntry.Config.SideWidth, yPositionOnScreen + 56 + borderWidth, 36, height - 88 - borderWidth), new Rectangle?(new Rectangle(278, 324, 9, 1)), Color.White);
+            b.Draw(Game1.mouseCursors, new Rectangle(xPositionOnScreen + borderWidth + ModEntry.Config.SideWidth, yPositionOnScreen + 56 + borderWidth, 36, height - 88 - borderWidth), new Rectangle(278, 324, 9, 1), Color.White);
             var cutoff = yPositionOnScreen + height - 32;
             if (whichSender is null)
             {
@@ -311,7 +308,7 @@ namespace MailboxMenu
             }
             else
             {
-                SpriteText.drawStringWithScrollCenteredAt(b, whichSender, xPositionOnScreen + (borderWidth + ModEntry.Config.SideWidth + width) / 2, yPositionOnScreen + borderWidth + 64, width - borderWidth * 5 - ModEntry.Config.SideWidth);
+                SpriteText.drawStringWithScrollCenteredAt(b, GetLocalizedSenderName(whichSender), xPositionOnScreen + (borderWidth + ModEntry.Config.SideWidth + width) / 2, yPositionOnScreen + borderWidth + 64, width - borderWidth * 5 - ModEntry.Config.SideWidth);
             }
             contained = 0;
             foreach (var cc in currentMailList)
@@ -396,6 +393,15 @@ namespace MailboxMenu
             base.draw(b);
         }
         
+        private string GetLocalizedSenderName(string senderName) {
+            if (senderName is "???" or "#") return senderName;
+            
+            var npcNames = Game1.content.Load<Dictionary<string, string>>("Strings\\NPCNames");
+            var characterNames = Game1.content.Load<Dictionary<string, string>>("Strings\\Characters");
+
+            return GetLocalizedSenderName(senderName, npcNames, characterNames);
+        }
+        
         private string GetLocalizedSenderName(string senderName, Dictionary<string, string> npcNames, Dictionary<string, string> characterNames) {
             if (senderName is "???" or "#") return senderName;
             
@@ -422,6 +428,7 @@ namespace MailboxMenu
             
             foreach (var kvp in npcNames.Where(kvp => senderName == kvp.Value)) {
                 englishName = kvp.Key;
+                if (englishName == "MisterQi") englishName = "Qi";
                 break;
             }
             
