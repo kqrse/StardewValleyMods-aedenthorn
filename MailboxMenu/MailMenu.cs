@@ -81,20 +81,23 @@ namespace MailboxMenu
             possibleSenders.Clear();
             bool addUnknown = false;
             Dictionary<string, string> mail = Game1.content.Load<Dictionary<string, string>>("Data\\mail");
+            
             foreach (var id in Game1.player.mailReceived)
             {
                 if (!mail.ContainsKey(id)) continue;
                 
                 if(ModEntry.envelopeData.TryGetValue(id, out EnvelopeData data) && !string.IsNullOrEmpty(data.sender))
                 {
-                    if(!possibleSenders.Contains(data.sender)) possibleSenders.Add(data.sender);
+                    if (!possibleSenders.Contains(data.sender)) possibleSenders.Add(data.sender);
                 }
                 else addUnknown = true;
             }
             var textHeight = (int)Game1.dialogueFont.MeasureString(ModEntry.Config.InboxText).Y;
             var textHeight2 = (int)Game1.smallFont.MeasureString(ModEntry.Config.InboxText).Y;
             int count = (height - borderWidth * 2 - 64 - (textHeight + 8) * 2) / textHeight2;
+            
             possibleSenders.Sort();
+            
             if (addUnknown) possibleSenders.Add("???");
             var possibleSenderList = possibleSenders.Skip(sideScrolled).Take(count).ToList();
 
@@ -248,18 +251,16 @@ namespace MailboxMenu
         }
         public override void snapToDefaultClickableComponent()
         {
-            if (!Game1.options.snappyMenus || !Game1.options.gamepadControls)
-                return;
-            if(currentlySnappedComponent == null)
-                currentlySnappedComponent = getComponentWithID(900);
+            if (!Game1.options.snappyMenus || !Game1.options.gamepadControls) return;
+            currentlySnappedComponent ??= getComponentWithID(900);
             snapCursorToCurrentSnappedComponent();
         }
         public override void applyMovementKey(int direction)
         {
             if(currentlySnappedComponent != null)
             {
-                if (direction == 1 && currentlySnappedComponent.rightNeighborID == -99999)
-                    return;
+                if (direction == 1 && currentlySnappedComponent.rightNeighborID == -99999) return;
+                
                 if (direction == 0)
                 {
                     if (currentlySnappedComponent.region == 4242 && mainScrolled > 0 && currentlySnappedComponent.myID < mailIndex + ModEntry.Config.GridColumns)
@@ -398,7 +399,7 @@ namespace MailboxMenu
         private string GetLocalizedSenderName(string senderName, Dictionary<string, string> npcNames, Dictionary<string, string> characterNames) {
             if (senderName is "???" or "#") return senderName;
             
-            if (npcNames.TryGetValue(senderName, out var localizedNpcName)) {
+            if (npcNames.TryGetValue(senderName != "Qi" ? senderName : "MisterQi", out var localizedNpcName)) {
                 return localizedNpcName;
             }
 
@@ -407,7 +408,7 @@ namespace MailboxMenu
                 return senderName.ToUpper()[0] + senderName[1..];
             }
 
-            ModEntry.SMonitor.Log("Unexpected name: " + senderName, LogLevel.Error);
+            ModEntry.SMonitor.Log("Unexpected name: " + senderName + ". If this name appears in the mail list, please leave a comment.", LogLevel.Warn);
             return senderName;
         }
 
