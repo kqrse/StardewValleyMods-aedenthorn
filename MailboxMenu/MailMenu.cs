@@ -413,8 +413,7 @@ namespace MailboxMenu
                 senderName = characterNames.GetValueOrDefault("Relative_" + senderName, senderName);
                 return senderName.ToUpper()[0] + senderName[1..];
             }
-
-            ModEntry.SMonitor.Log("Unexpected name: " + senderName + ". If this name appears in the mail list, please leave a comment.", LogLevel.Warn);
+            
             return senderName;
         }
 
