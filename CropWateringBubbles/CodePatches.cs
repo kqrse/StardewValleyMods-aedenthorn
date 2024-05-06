@@ -18,6 +18,7 @@ namespace CropWateringBubbles
                 if (__instance.hoeDirt.Value.crop is null) return;
 
                 var crop = __instance.hoeDirt.Value.crop;
+                if (crop.indexOfHarvest.Value == "771") return;
                 if (crop.dead.Value) return;
                 if (__instance.hoeDirt.Value.state.Value != 0) return;
                 if (crop.currentPhase.Value >= crop.phaseDays.Count - 1 && (!crop.fullyGrown.Value || crop.dayOfCurrentPhase.Value <= 0)) return;
