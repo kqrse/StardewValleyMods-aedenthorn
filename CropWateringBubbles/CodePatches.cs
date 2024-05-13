@@ -48,6 +48,7 @@ namespace CropWateringBubbles
                 if (!Config.ModEnabled ||
                     (!isEmoting && Config.RepeatInterval != 0) || 
                     __instance.crop is null ||
+                    __instance.crop.indexOfHarvest.Value == "771" || 
                     __instance.crop.dead.Value ||
                     __instance.state.Value != 0 ||
                     (__instance.crop.currentPhase.Value >= __instance.crop.phaseDays.Count - 1 && (!__instance.crop.fullyGrown.Value || __instance.crop.dayOfCurrentPhase.Value <= 0) && !CanBecomeGiant(__instance)) ||
