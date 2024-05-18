@@ -1,0 +1,10 @@
+{
+  "GMCM_Option_ModEnabled_Name": "MODを有効にする",
+  "GMCM_Option_OpacityPercent_Name": "不透明度",
+  "GMCM_Option_SizePercent_Name": "ふきだしサイズ",
+  "GMCM_Option_PressKeys_Name": "設定キー",
+  "GMCM_Option_RepeatInterval_Name": "表示間隔",
+  "GMCM_Option_RequireKeyPress_Name": "設定キーを押している間のみ表示",
+  "GMCM_Option_IncludeGiantable_Name": "巨大な作物のための表示",
+  "GMCM_Option_OnlyWhenWatering_Name": "ジョウロを持っている時のみ表示"
+}
